@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- *  Ding_entity's drush integration.
+ * Ding_entity's drush integration.
  */
 
 /**
@@ -15,6 +15,9 @@ function ding_entity_drush_command() {
   return $items;
 }
 
+/**
+ * Update all entity fields.
+ */
 function drush_ding_entity_update() {
   $modules = array();
   foreach (module_list() as $module) {

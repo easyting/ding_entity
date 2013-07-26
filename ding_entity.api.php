@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Hooks provided by the Ding Entity module.
@@ -16,20 +15,20 @@
  * This hook allows modules to add local tasks to ding_entities,
  * regardless of which module provides the entity implementation.
  *
- * @param &$items
+ * @param array &$items
  *   The menu items already defined. The place to add items.
- * @param $type
+ * @param string $type
  *   Type of the objects to add menus for (ding_entity or
  *   ding_entity_collection).
- * @param $path
+ * @param string $path
  *   Base path of the object type.
- * @param $index
+ * @param int $index
  *   Index of the object loader in the path.
  */
 function hook_ding_entity_menu(&$items, $type, $path, $index) {
   if ($type == 'ding_entity') {
     $items[$path . '/reserve'] = array(
-      'title' => t('Reserve'),
+      'title' => 'Reserve',
       'page callback' => 'ding_provider_get_form',
       'page arguments' => array('ding_reservation_reserve_form', $index),
       'access callback' => TRUE,
@@ -38,24 +37,16 @@ function hook_ding_entity_menu(&$items, $type, $path, $index) {
 }
 
 /**
- *
+ * Display a ding_entity.
  */
-function hook_ding_entity_view(&$object, $view_mode) {
+function hook_ding_entity_view($object, $view_mode, $langcode) {
 
 }
 
 /**
+ * Tell ding_entity about fields, so it can create proper fields and instances.
  *
- */
-function hook_ding_entity_collection_view(&$object, $view_mode) {
-
-}
-
-/**
- * Tell ding_entity about ding_entity fields, so it can create the
- * proper fields and instances.
- *
- * @return
+ * @return array
  *   An array whose keys are the names of the field, and the value is
  *   an array with the following key value pairs:
  *   - field: An array of field settings, as accepted by
@@ -102,7 +93,9 @@ function hook_ding_entity_fields() {
  */
 function hook_ding_entity_buttons($type, $entity) {
   if ($type == 'ding_entity' && $entity->is('reservable')) {
-    return array(ding_provider_get_form('ding_reservation_reserve_form', new DingReservationReservableEntity($entity), TRUE));
+    return array(
+      ding_provider_get_form('ding_reservation_reserve_form', new DingReservationReservableEntity($entity), TRUE),
+    );
   }
 }
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Interface module for talking with the materials backend.
@@ -105,7 +104,6 @@ function ding_entity_info($ding_entity_type = NULL) {
       }
     }
   }
-
 
   if (empty($ding_entity_type)) {
     return $types;
@@ -260,9 +258,11 @@ function ding_entity_field_formatter_view($entity_type, $entity, $field, $instan
       case 'ding_entity_buttons_default':
         $element[$delta] = module_invoke_all('ding_entity_buttons', 'ding_entity', $entity);
         break;
+
       case 'ding_entity_buttons_ajax':
         $element[$delta] = module_invoke_all('ding_entity_buttons', 'ding_entity', $entity, 'ajax');
         break;
+
     }
   }
 
@@ -291,6 +291,9 @@ class DingEntityBase {
    */
   const NULL = 'DingEntityBase::undefined';
 
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     foreach (get_object_vars($this) as $prop => $val) {
       if ($val === self::NULL) {
@@ -302,10 +305,22 @@ class DingEntityBase {
     }
   }
 
+  /**
+   * Wakeup handler.
+   */
   public function __wakeup() {
     self::__construct();
   }
 
+  /**
+   * Get property value.
+   *
+   * @param string $prop
+   *   Property name.
+   *
+   * @return mixed
+   *   Property value.
+   */
   public function __get($prop) {
     if (array_key_exists($prop, $this->properties)) {
       if ($this->properties[$prop] === self::NULL) {
@@ -314,9 +329,9 @@ class DingEntityBase {
         }
         else {
           $trace = debug_backtrace();
-          trigger_error('No getter defined for ' . $prop .
+          trigger_error(check_plain('No getter defined for ' . $prop .
             ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
+            ' on line ' . $trace[0]['line']),
             E_USER_NOTICE);
           return NULL;
         }
@@ -325,17 +340,27 @@ class DingEntityBase {
     }
 
     $trace = debug_backtrace();
-    trigger_error('Undefined property via __get(): ' . $prop .
+    trigger_error(check_plain('Undefined property via __get(): ' . $prop .
       ' in ' . $trace[0]['file'] .
-      ' on line ' . $trace[0]['line'],
+      ' on line ' . $trace[0]['line']),
       E_USER_NOTICE);
 
     return NULL;
   }
 
+  /**
+   * Check if property is set.
+   *
+   * isset() is defined as whether "a variable is set and is not NULL".
+   * If the property does not exist then isset() should always be FALSE.
+   *
+   * @param string $prop
+   *   Property name.
+   *
+   * @return bool
+   *   TRUE if property is set.
+   */
   public function __isset($prop) {
-    // isset() is defined as whether "a variable is set and is not NULL"
-    // If the property does not exist then isset() should always be FALSE.
     // We cannot just call __get($prop), as that will trigger a NOTICE on
     // non-existing properties, which __isset should not.
     if (!isset($this->properties[$prop])) {
@@ -351,8 +376,10 @@ class DingEntityBase {
    *
    * Handles NULL values.
    *
-   * @param $properties array of properties to copy from $values.
-   * @param $values associative array of values to copy.
+   * @param array $properties
+   *   array of properties to copy from $values.
+   * @param array $values
+   *   associative array of values to copy.
    */
   protected function _populate($properties, $values) {
     foreach ($properties as $prop) {
@@ -393,6 +420,12 @@ abstract class DingEntity extends DingEntityBase {
    */
   public $abstract = DingEntityBase::NULL;
 
+  /**
+   * Get entity ID.
+   *
+   * @return int
+   *   Entity ID.
+   */
   public function getId() {
     return $this->id = $this->ding_entity_id;
   }
@@ -442,6 +475,12 @@ abstract class DingEntityCollection extends DingEntityBase {
    */
   public $entities = DingEntityBase::NULL;
 
+  /**
+   * Get entity ID.
+   *
+   * @return int
+   *   Entity ID.
+   */
   public function getId() {
     return $this->id = $this->ding_entity_id;
   }
