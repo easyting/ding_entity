@@ -5,3 +5,4 @@ version = "7.x-1.14"
 core = 7.x
 
 dependencies[] = virtual_field
+files[] = ding_entity.base.inc
