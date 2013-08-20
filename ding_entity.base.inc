@@ -59,7 +59,6 @@ class DingEntityBase {
         }
         else {
           // TODO: Add admin settings to enable debug logging.
-          /*
           $trace = debug_backtrace(FALSE, 5);
           watchdog(
             'ding_entity',
@@ -72,7 +71,6 @@ class DingEntityBase {
             ),
             WATCHDOG_DEBUG
           );
-          */
           return NULL;
         }
       }
@@ -80,7 +78,6 @@ class DingEntityBase {
     }
 
     // TODO: Add admin settings to enable debug logging.
-    /*
     $trace = debug_backtrace(FALSE, 5);
     watchdog(
       'ding_entity',
@@ -93,7 +90,6 @@ class DingEntityBase {
       ),
       WATCHDOG_DEBUG
     );
-    */
 
     return NULL;
   }
