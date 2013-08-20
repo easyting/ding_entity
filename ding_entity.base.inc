@@ -58,22 +58,38 @@ class DingEntityBase {
           $this->properties[$prop] = call_user_func(array($this, $method));
         }
         else {
-          $trace = debug_backtrace();
-          trigger_error(check_plain('No getter defined for ' . $prop .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line']),
-            E_USER_NOTICE);
+          // TODO: Add admin settings to enable debug logging.
+          $trace = debug_backtrace(FALSE, 5);
+          watchdog(
+            'ding_entity',
+            "No getter defined for %prop in %file on line %line<br />%trace",
+            array(
+              '%prop' => $prop,
+              '%file' => $trace[0]['file'],
+              '%line' => $trace[0]['line'],
+              '%trace' => print_r($trace, TRUE),
+            ),
+            WATCHDOG_DEBUG
+          );
           return NULL;
         }
       }
       return $this->properties[$prop];
     }
 
-    $trace = debug_backtrace();
-    trigger_error(check_plain('Undefined property via __get(): ' . $prop .
-      ' in ' . $trace[0]['file'] .
-      ' on line ' . $trace[0]['line']),
-      E_USER_NOTICE);
+    // TODO: Add admin settings to enable debug logging.
+    $trace = debug_backtrace(FALSE, 5);
+    watchdog(
+      'ding_entity',
+      "Undefined property via __get(): %prop in %file on line %line<br />%trace",
+      array(
+        '%prop' => $prop,
+        '%file' => $trace[0]['file'],
+        '%line' => $trace[0]['line'],
+        '%trace' => print_r($trace, TRUE),
+      ),
+      WATCHDOG_DEBUG
+    );
 
     return NULL;
   }
