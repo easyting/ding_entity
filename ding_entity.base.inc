@@ -30,7 +30,9 @@ class DingEntityBase {
         // Unset the property, so __get() will take over.
         unset($this->$prop);
         // Set the value to our special null value.
-        $this->properties[$prop] = self::NULL;
+        if (!isset($this->properties[$prop])) {
+          $this->properties[$prop] = self::NULL;
+        }
       }
     }
   }
