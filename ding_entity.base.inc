@@ -61,15 +61,13 @@ class DingEntityBase {
         }
         else {
           // TODO: Add admin settings to enable debug logging.
-          $trace = debug_backtrace(FALSE);
-          $trace_str = '';
+          $e = new Exception();
           watchdog(
             'ding_entity',
-            "No getter defined for %prop in %file on line %line.",
+            "No getter defined for %prop !trace",
             array(
               '%prop' => $prop,
-              '%file' => $trace[0]['file'],
-              '%line' => $trace[0]['line'],
+              '!trace' => nl2br("\n" . $e->getTraceAsString()),
             ),
             WATCHDOG_DEBUG
           );
@@ -80,15 +78,13 @@ class DingEntityBase {
     }
 
     // TODO: Add admin settings to enable debug logging.
-    $trace = debug_backtrace(FALSE);
-    $trace_str = '';
+    $e = new Exception();
     watchdog(
       'ding_entity',
-      "Undefined property via __get(): %prop in %file on line %line.",
+      "Undefined property via __get(): %prop !trace",
       array(
         '%prop' => $prop,
-        '%file' => $trace[0]['file'],
-        '%line' => $trace[0]['line'],
+        '!trace' => nl2br("\n" . $e->getTraceAsString()),
       ),
       WATCHDOG_DEBUG
     );
